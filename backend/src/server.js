@@ -60,7 +60,7 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-# CORS configuration
+// CORS configuration
 const allowedOrigins = [
   'https://nep-stay.vercel.app',
   process.env.CLIENT_URL || 'http://localhost:3000',
