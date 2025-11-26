@@ -40,7 +40,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "seed": "node ../backend/src/utils/seedData.js"
+    "seed": "node ../backend/src/utils/seedData.js",
+    "vercel-build": "npm run build"
   },
   "browserslist": {
     "production": [

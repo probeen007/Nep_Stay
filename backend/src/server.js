@@ -60,9 +60,24 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// CORS configuration
+# CORS configuration
+const allowedOrigins = [
+  'https://nep-stay.vercel.app',
+  process.env.CLIENT_URL || 'http://localhost:3000',
+  'http://localhost:3000'
+];
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.some(allowed => origin?.includes(allowed))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -165,6 +180,9 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-startServer();
+// Start server only if not in serverless environment
+if (process.env.VERCEL !== '1') {
+  startServer();
+}
 
 module.exports = app;
