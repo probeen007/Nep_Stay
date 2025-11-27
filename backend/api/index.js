@@ -1,46 +1,39 @@
 const mongoose = require('mongoose');
-const app = require('../src/server');
 
 // Cache the database connection
-let isConnected = false;
+let cachedDb = null;
 
 const connectDB = async () => {
-  if (isConnected && mongoose.connection.readyState === 1) {
-    console.log('Using existing database connection');
-    return;
+  if (cachedDb && mongoose.connection.readyState === 1) {
+    console.log('=> Using cached database connection');
+    return cachedDb;
   }
 
+  console.log('=> Creating new database connection');
+  
   try {
-    const db = await mongoose.connect(process.env.MONGODB_URI, {
+    const opts = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
+      bufferCommands: false, // Disable buffering
       maxPoolSize: 10,
-    });
-    
-    isConnected = db.connections[0].readyState === 1;
-    console.log('MongoDB connected for serverless function');
+    };
+
+    const db = await mongoose.connect(process.env.MONGODB_URI, opts);
+    cachedDb = db;
+    console.log('=> MongoDB connected successfully');
+    return db;
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('=> MongoDB connection error:', error);
     throw error;
   }
 };
 
-// Middleware to ensure DB connection before handling requests
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      error: { 
-        message: 'Database connection failed',
-        details: error.message 
-      } 
-    });
-  }
-});
+// Connect to database before loading app
+connectDB().catch(err => console.error('Initial connection failed:', err));
+
+const app = require('../src/server');
 
 module.exports = app;
