@@ -100,13 +100,13 @@ const schemas = {
         'any.required': 'Short description is required'
       }),
     images: Joi.array()
-      .items(Joi.string().uri().pattern(/\.(jpg|jpeg|png|webp|gif)$/i))
+      .items(Joi.string().uri())
       .min(1)
       .max(10)
       .messages({
         'array.min': 'At least one image is required',
         'array.max': 'Maximum 10 images allowed',
-        'string.pattern.base': 'Image must be a valid URL ending with jpg, jpeg, png, webp, or gif'
+        'string.uri': 'Each image must be a valid URL'
       }),
     pricePerNight: Joi.number()
       .positive()
@@ -215,13 +215,13 @@ const schemas = {
         'string.max': 'Short description cannot exceed 200 characters'
       }),
     images: Joi.array()
-      .items(Joi.string().uri().pattern(/\.(jpg|jpeg|png|webp|gif)$/i))
+      .items(Joi.string().uri())
       .min(1)
       .max(10)
       .messages({
         'array.min': 'At least one image is required',
         'array.max': 'Maximum 10 images allowed',
-        'string.pattern.base': 'Image must be a valid URL ending with jpg, jpeg, png, webp, or gif'
+        'string.uri': 'Each image must be a valid URL'
       }),
     pricePerNight: Joi.number()
       .positive()

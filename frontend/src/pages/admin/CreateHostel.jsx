@@ -117,11 +117,28 @@ const CreateHostel = () => {
       console.error('Error details:', {
         message: error?.error?.message || error?.message,
         code: error?.error?.code,
+        validationDetails: error?.error?.details,
         full: error
       });
       
-      const errorMessage = error?.error?.message || error?.message || 'Failed to create hostel. Please try again.';
-      setErrors({ submit: errorMessage });
+      // Handle validation errors
+      if (error?.error?.details && Array.isArray(error.error.details)) {
+        const validationErrors = {};
+        error.error.details.forEach(detail => {
+          validationErrors[detail.field] = detail.message;
+        });
+        setErrors(validationErrors);
+        
+        // Show summary message
+        const fieldsList = error.error.details.map(d => d.field).join(', ');
+        setErrors(prev => ({ 
+          ...prev, 
+          submit: `Validation failed for: ${fieldsList}` 
+        }));
+      } else {
+        const errorMessage = error?.error?.message || error?.message || 'Failed to create hostel. Please try again.';
+        setErrors({ submit: errorMessage });
+      }
     } finally {
       setLoading(false);
     }
