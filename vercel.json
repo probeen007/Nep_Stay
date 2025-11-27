@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "backend/api/index.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "maxDuration": 30
+      }
     },
     {
       "src": "frontend/package.json",
@@ -19,15 +22,11 @@
       "dest": "backend/api/index.js"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "frontend/assets/$1"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
       "dest": "frontend/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }

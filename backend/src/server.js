@@ -124,13 +124,13 @@ app.use(notFound);
 // Global error handler
 app.use(errorHandler);
 
-// Database connection
+// Database connection (only used in non-serverless mode)
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 30000, // Increase timeout for serverless
+      serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
       maxPoolSize: 10,
     });
@@ -138,7 +138,6 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error('Database connection error:', error.message);
-    // Don't exit in serverless environment
     if (process.env.VERCEL !== '1') {
       process.exit(1);
     }
