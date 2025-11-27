@@ -1,14 +1,27 @@
 const mongoose = require('mongoose');
+const express = require('express');
 
 // Cache the database connection
-let cachedDb = null;
+let isConnecting = false;
+let isConnected = false;
 
 const connectDB = async () => {
-  if (cachedDb && mongoose.connection.readyState === 1) {
+  // If already connected, return immediately
+  if (isConnected && mongoose.connection.readyState === 1) {
     console.log('=> Using cached database connection');
-    return cachedDb;
+    return Promise.resolve();
   }
 
+  // If connection is in progress, wait for it
+  if (isConnecting) {
+    console.log('=> Waiting for existing connection attempt');
+    while (isConnecting) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    return Promise.resolve();
+  }
+
+  isConnecting = true;
   console.log('=> Creating new database connection');
   
   try {
@@ -21,19 +34,42 @@ const connectDB = async () => {
       maxPoolSize: 10,
     };
 
-    const db = await mongoose.connect(process.env.MONGODB_URI, opts);
-    cachedDb = db;
+    await mongoose.connect(process.env.MONGODB_URI, opts);
+    isConnected = true;
+    isConnecting = false;
     console.log('=> MongoDB connected successfully');
-    return db;
+    return Promise.resolve();
   } catch (error) {
+    isConnecting = false;
+    isConnected = false;
     console.error('=> MongoDB connection error:', error);
     throw error;
   }
 };
 
-// Connect to database before loading app
-connectDB().catch(err => console.error('Initial connection failed:', err));
+// Create wrapper that ensures DB connection before passing to app
+const handler = async (req, res) => {
+  try {
+    // Ensure database is connected
+    await connectDB();
+    
+    // Load the app only after DB connection
+    if (!handler.app) {
+      handler.app = require('../src/server');
+    }
+    
+    // Handle the request
+    return handler.app(req, res);
+  } catch (error) {
+    console.error('Handler error:', error);
+    return res.status(503).json({
+      success: false,
+      error: {
+        message: 'Database service unavailable',
+        details: error.message
+      }
+    });
+  }
+};
 
-const app = require('../src/server');
-
-module.exports = app;
+module.exports = handler;
