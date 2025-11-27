@@ -94,10 +94,10 @@ const schemas = {
       }),
     shortDescription: Joi.string()
       .max(200)
-      .required()
+      .allow('')
+      .optional()
       .messages({
-        'string.max': 'Short description cannot exceed 200 characters',
-        'any.required': 'Short description is required'
+        'string.max': 'Short description cannot exceed 200 characters'
       }),
     images: Joi.array()
       .items(Joi.string().uri())
@@ -126,10 +126,9 @@ const schemas = {
     contact: Joi.object({
       phone: Joi.string()
         .pattern(/^(\+977)?[0-9]{10}$/)
-        .required()
+        .allow('')
         .messages({
-          'string.pattern.base': 'Please provide a valid Nepali phone number',
-          'any.required': 'Phone number is required'
+          'string.pattern.base': 'Please provide a valid Nepali phone number'
         }),
       whatsapp: Joi.string()
         .pattern(/^(\+977)?[0-9]{10}$/)
@@ -140,14 +139,12 @@ const schemas = {
       facebook: Joi.string()
         .uri()
         .allow('')
-        .pattern(/facebook\.com/)
         .messages({
           'string.pattern.base': 'Please provide a valid Facebook URL'
         }),
       instagram: Joi.string()
         .uri()
         .allow('')
-        .pattern(/instagram\.com/)
         .messages({
           'string.pattern.base': 'Please provide a valid Instagram URL'
         }),
@@ -157,24 +154,23 @@ const schemas = {
         .messages({
           'string.uri': 'Please provide a valid website URL'
         })
-    }).required(),
+    }).optional(),
     location: Joi.object({
       city: Joi.string()
-        .required()
+        .allow('')
         .messages({
           'any.required': 'City is required'
         }),
       area: Joi.string()
-        .required()
+        .allow('')
         .messages({
           'any.required': 'Area is required'
         }),
       address: Joi.string()
         .max(200)
-        .required()
+        .allow('')
         .messages({
-          'string.max': 'Address cannot exceed 200 characters',
-          'any.required': 'Address is required'
+          'string.max': 'Address cannot exceed 200 characters'
         }),
       googleMapsUrl: Joi.string()
         .uri()
@@ -182,7 +178,7 @@ const schemas = {
         .messages({
           'string.uri': 'Please provide a valid Google Maps URL'
         })
-    }).required(),
+    }).optional(),
     facilities: Joi.array()
       .items(Joi.string().max(50))
       .max(20)
