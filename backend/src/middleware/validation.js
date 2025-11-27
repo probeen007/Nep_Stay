@@ -94,7 +94,7 @@ const schemas = {
       }),
     shortDescription: Joi.string()
       .max(200)
-      .allow('')
+      .allow('', null)
       .optional()
       .messages({
         'string.max': 'Short description cannot exceed 200 characters'
@@ -123,34 +123,44 @@ const schemas = {
         'number.positive': 'Total beds must be a positive number',
         'any.required': 'Total beds is required'
       }),
-    contact: Joi.object({
+    contactInfo: Joi.object({
       phone: Joi.string()
-        .pattern(/^(\+977)?[0-9]{10}$/)
         .allow('')
+        .optional()
         .messages({
-          'string.pattern.base': 'Please provide a valid Nepali phone number'
+          'string.pattern.base': 'Please provide a valid phone number'
+        }),
+      email: Joi.string()
+        .email()
+        .allow('')
+        .optional()
+        .messages({
+          'string.email': 'Please provide a valid email address'
         }),
       whatsapp: Joi.string()
-        .pattern(/^(\+977)?[0-9]{10}$/)
         .allow('')
+        .optional()
         .messages({
           'string.pattern.base': 'Please provide a valid WhatsApp number'
         }),
       facebook: Joi.string()
         .uri()
         .allow('')
+        .optional()
         .messages({
-          'string.pattern.base': 'Please provide a valid Facebook URL'
+          'string.uri': 'Please provide a valid Facebook URL'
         }),
       instagram: Joi.string()
         .uri()
         .allow('')
+        .optional()
         .messages({
-          'string.pattern.base': 'Please provide a valid Instagram URL'
+          'string.uri': 'Please provide a valid Instagram URL'
         }),
       website: Joi.string()
         .uri()
         .allow('')
+        .optional()
         .messages({
           'string.uri': 'Please provide a valid website URL'
         })
@@ -158,23 +168,21 @@ const schemas = {
     location: Joi.object({
       city: Joi.string()
         .allow('')
-        .messages({
-          'any.required': 'City is required'
-        }),
+        .optional(),
       area: Joi.string()
         .allow('')
-        .messages({
-          'any.required': 'Area is required'
-        }),
+        .optional(),
       address: Joi.string()
         .max(200)
         .allow('')
+        .optional()
         .messages({
           'string.max': 'Address cannot exceed 200 characters'
         }),
       googleMapsUrl: Joi.string()
         .uri()
         .allow('', null)
+        .optional()
         .messages({
           'string.uri': 'Please provide a valid Google Maps URL'
         })
