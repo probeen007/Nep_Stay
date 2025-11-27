@@ -108,11 +108,20 @@ const CreateHostel = () => {
         delete cleanData.location.googleMapsUrl;
       }
 
-      await hostelService.create(cleanData);
+      console.log('Creating hostel with data:', cleanData);
+      const response = await hostelService.create(cleanData);
+      console.log('Create hostel response:', response);
       navigate('/admin/hostels', { replace: true });
     } catch (error) {
       console.error('Error creating hostel:', error);
-      setErrors({ submit: 'Failed to create hostel. Please try again.' });
+      console.error('Error details:', {
+        message: error?.error?.message || error?.message,
+        code: error?.error?.code,
+        full: error
+      });
+      
+      const errorMessage = error?.error?.message || error?.message || 'Failed to create hostel. Please try again.';
+      setErrors({ submit: errorMessage });
     } finally {
       setLoading(false);
     }

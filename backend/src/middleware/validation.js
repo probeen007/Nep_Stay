@@ -108,12 +108,20 @@ const schemas = {
         'array.max': 'Maximum 10 images allowed',
         'string.pattern.base': 'Image must be a valid URL ending with jpg, jpeg, png, webp, or gif'
       }),
-    price: Joi.number()
+    pricePerNight: Joi.number()
       .positive()
       .required()
       .messages({
         'number.positive': 'Price must be a positive number',
         'any.required': 'Price is required'
+      }),
+    totalBeds: Joi.number()
+      .integer()
+      .positive()
+      .required()
+      .messages({
+        'number.positive': 'Total beds must be a positive number',
+        'any.required': 'Total beds is required'
       }),
     contact: Joi.object({
       phone: Joi.string()
@@ -150,31 +158,29 @@ const schemas = {
           'string.uri': 'Please provide a valid website URL'
         })
     }).required(),
-    address: Joi.string()
-      .max(200)
-      .required()
-      .messages({
-        'string.max': 'Address cannot exceed 200 characters',
-        'any.required': 'Address is required'
-      }),
-    coordinates: Joi.object({
-      lat: Joi.number()
-        .min(-90)
-        .max(90)
+    location: Joi.object({
+      city: Joi.string()
         .required()
         .messages({
-          'number.min': 'Latitude must be between -90 and 90',
-          'number.max': 'Latitude must be between -90 and 90',
-          'any.required': 'Latitude is required'
+          'any.required': 'City is required'
         }),
-      lng: Joi.number()
-        .min(-180)
-        .max(180)
+      area: Joi.string()
         .required()
         .messages({
-          'number.min': 'Longitude must be between -180 and 180',
-          'number.max': 'Longitude must be between -180 and 180',
-          'any.required': 'Longitude is required'
+          'any.required': 'Area is required'
+        }),
+      address: Joi.string()
+        .max(200)
+        .required()
+        .messages({
+          'string.max': 'Address cannot exceed 200 characters',
+          'any.required': 'Address is required'
+        }),
+      googleMapsUrl: Joi.string()
+        .uri()
+        .allow('', null)
+        .messages({
+          'string.uri': 'Please provide a valid Google Maps URL'
         })
     }).required(),
     facilities: Joi.array()
@@ -183,6 +189,11 @@ const schemas = {
       .messages({
         'array.max': 'Maximum 20 facilities allowed',
         'string.max': 'Facility name cannot exceed 50 characters'
+      }),
+    rules: Joi.array()
+      .items(Joi.string().max(200))
+      .messages({
+        'string.max': 'Rule cannot exceed 200 characters'
       }),
     featured: Joi.boolean()
   }),
@@ -212,10 +223,16 @@ const schemas = {
         'array.max': 'Maximum 10 images allowed',
         'string.pattern.base': 'Image must be a valid URL ending with jpg, jpeg, png, webp, or gif'
       }),
-    price: Joi.number()
+    pricePerNight: Joi.number()
       .positive()
       .messages({
         'number.positive': 'Price must be a positive number'
+      }),
+    totalBeds: Joi.number()
+      .integer()
+      .positive()
+      .messages({
+        'number.positive': 'Total beds must be a positive number'
       }),
     contact: Joi.object({
       phone: Joi.string()
@@ -250,25 +267,25 @@ const schemas = {
           'string.uri': 'Please provide a valid website URL'
         })
     }),
-    address: Joi.string()
-      .max(200)
-      .messages({
-        'string.max': 'Address cannot exceed 200 characters'
-      }),
-    coordinates: Joi.object({
-      lat: Joi.number()
-        .min(-90)
-        .max(90)
+    location: Joi.object({
+      city: Joi.string()
         .messages({
-          'number.min': 'Latitude must be between -90 and 90',
-          'number.max': 'Latitude must be between -90 and 90'
+          'any.required': 'City is required'
         }),
-      lng: Joi.number()
-        .min(-180)
-        .max(180)
+      area: Joi.string()
         .messages({
-          'number.min': 'Longitude must be between -180 and 180',
-          'number.max': 'Longitude must be between -180 and 180'
+          'any.required': 'Area is required'
+        }),
+      address: Joi.string()
+        .max(200)
+        .messages({
+          'string.max': 'Address cannot exceed 200 characters'
+        }),
+      googleMapsUrl: Joi.string()
+        .uri()
+        .allow('', null)
+        .messages({
+          'string.uri': 'Please provide a valid Google Maps URL'
         })
     }),
     facilities: Joi.array()
@@ -277,6 +294,11 @@ const schemas = {
       .messages({
         'array.max': 'Maximum 20 facilities allowed',
         'string.max': 'Facility name cannot exceed 50 characters'
+      }),
+    rules: Joi.array()
+      .items(Joi.string().max(200))
+      .messages({
+        'string.max': 'Rule cannot exceed 200 characters'
       }),
     featured: Joi.boolean(),
     isActive: Joi.boolean()
