@@ -137,7 +137,7 @@ const SearchPage = () => {
           />
           <div className="absolute top-4 left-4">
             <Badge variant="primary">
-              Rs. {hostel.price}/night
+              Rs. {hostel.pricePerNight || hostel.price}/night
             </Badge>
           </div>
           <div className="absolute top-4 right-4">
@@ -157,7 +157,7 @@ const SearchPage = () => {
           
           <div className="flex items-center text-gray-600 mb-3">
             <MapPin className="w-4 h-4 mr-2 text-nep-red" />
-            <span className="text-sm">{hostel.address}</span>
+            <span className="text-sm">{hostel.location?.address || hostel.address}</span>
           </div>
           
           <p className="text-gray-600 mb-4 line-clamp-2">

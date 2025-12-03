@@ -90,7 +90,7 @@ const AdminDashboard = () => {
     popularAreas: dashboardData?.topFacilities || [],
     recentHostels: (dashboardData?.recentHostels || []).map(hostel => ({
       ...hostel,
-      location: {
+      location: hostel.location || {
         area: hostel.address || 'Unknown Location'
       }
     })),
@@ -319,7 +319,7 @@ const AdminDashboard = () => {
                           {hostel.name}
                         </p>
                         <p className="text-sm text-gray-600">
-                          📍 {hostel.location.area} • ₹{hostel.price || hostel.pricePerNight}/night
+                          📍 {hostel.location?.area || hostel.address || 'Unknown'} • ₹{hostel.pricePerNight || hostel.price}/night
                         </p>
                       </div>
                       <div className="text-right flex-shrink-0">

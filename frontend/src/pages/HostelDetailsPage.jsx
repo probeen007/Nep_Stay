@@ -91,7 +91,7 @@ const HostelDetailsPage = () => {
       try {
         await navigator.share({
           title: `${hostel.name} - KathmanduHostels`,
-          text: `Check out ${hostel.name} at ${hostel.address}`,
+          text: `Check out ${hostel.name} at ${hostel.location?.address || hostel.address}`,
           url: window.location.href,
         });
       } catch (error) {
@@ -213,7 +213,7 @@ const HostelDetailsPage = () => {
                 
                 <div className="absolute top-4 left-4">
                   <Badge variant="primary" className="text-lg px-4 py-2">
-                    Rs. {hostel.price}/night
+                    Rs. {hostel.pricePerNight || hostel.price}/night
                   </Badge>
                 </div>
                 
@@ -262,7 +262,7 @@ const HostelDetailsPage = () => {
                 <div className="flex items-center gap-4 text-gray-600 mb-4">
                   <div className="flex items-center gap-2">
                     <MapPin className="w-5 h-5 text-nep-red" />
-                    <span>{hostel.address}</span>
+                    <span>{hostel.location?.address || hostel.address}</span>
                   </div>
                   
                   <div className="flex items-center gap-2">
@@ -346,7 +346,7 @@ const HostelDetailsPage = () => {
             <Card className="p-6 sticky top-32">
               <div className="text-center mb-6">
                 <div className="text-3xl font-bold text-nep-red mb-2">
-                  Rs. {hostel.price}
+                  Rs. {hostel.pricePerNight || hostel.price}
                 </div>
                 <div className="text-gray-600">per night</div>
               </div>
@@ -399,7 +399,7 @@ const HostelDetailsPage = () => {
                   <MapPin className="w-5 h-5 text-nep-red mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="font-medium">{hostel.name}</p>
-                    <p className="text-gray-600">{hostel.address}</p>
+                    <p className="text-gray-600">{hostel.location?.address || hostel.address}</p>
                   </div>
                 </div>
               </div>
@@ -408,7 +408,7 @@ const HostelDetailsPage = () => {
               <GoogleMiniMap
                 googleMapsUrl={hostel.googleMapsUrl || hostel.location?.googleMapsUrl}
                 hostelName={hostel.name}
-                address={hostel.address}
+                address={hostel.location?.address || hostel.address}
               />
               
               {/* Show coordinates as fallback if no Google Maps URL */}
@@ -442,7 +442,7 @@ const HostelDetailsPage = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Area</span>
-                  <Badge variant="outline">{hostel.address}</Badge>
+                  <Badge variant="outline">{hostel.location?.area || hostel.address}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Price Range</span>

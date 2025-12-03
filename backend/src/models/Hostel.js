@@ -21,33 +21,35 @@ const hostelSchema = new mongoose.Schema({
   },
   shortDescription: {
     type: String,
-    required: [true, 'Short description is required'],
     maxlength: [200, 'Short description cannot exceed 200 characters']
   },
   images: [{
     type: String,
     validate: {
       validator: function(v) {
-        return /^https?:\/\/.+\.(jpg|jpeg|png|webp|gif)$/i.test(v);
+        return /^https?:\/\/.+$/i.test(v);
       },
       message: 'Please provide a valid image URL'
     }
   }],
-  price: {
+  pricePerNight: {
     type: Number,
     required: [true, 'Price is required'],
     min: [0, 'Price cannot be negative']
   },
-  contact: {
+  totalBeds: {
+    type: Number,
+    required: [true, 'Total beds is required'],
+    min: [1, 'At least 1 bed is required']
+  },
+  contactInfo: {
     phone: {
+      type: String
+    },
+    email: {
       type: String,
-      required: [true, 'Phone number is required'],
-      validate: {
-        validator: function(v) {
-          return /^(\+977)?[0-9]{10}$/.test(v.replace(/[\s-]/g, ''));
-        },
-        message: 'Please provide a valid Nepali phone number'
-      }
+      lowercase: true,
+      trim: true
     },
     whatsapp: {
       type: String,
@@ -86,30 +88,28 @@ const hostelSchema = new mongoose.Schema({
       }
     }
   },
-  address: {
-    type: String,
-    required: [true, 'Address is required'],
-    maxlength: [200, 'Address cannot exceed 200 characters']
-  },
-  coordinates: {
-    lat: {
-      type: Number,
-      min: [-90, 'Latitude must be between -90 and 90'],
-      max: [90, 'Latitude must be between -90 and 90']
+  location: {
+    city: {
+      type: String,
+      trim: true
     },
-    lng: {
-      type: Number,
-      min: [-180, 'Longitude must be between -180 and 180'],
-      max: [180, 'Longitude must be between -180 and 180']
-    }
-  },
-  googleMapsUrl: {
-    type: String,
-    validate: {
-      validator: function(v) {
-        return !v || /^https:\/\/www\.google\.com\/maps\/embed/.test(v);
-      },
-      message: 'Please provide a valid Google Maps embed URL'
+    area: {
+      type: String,
+      trim: true
+    },
+    address: {
+      type: String,
+      trim: true,
+      maxlength: [200, 'Address cannot exceed 200 characters']
+    },
+    googleMapsUrl: {
+      type: String,
+      validate: {
+        validator: function(v) {
+          return !v || /^https:\/\/www\.google\.com\/maps\/embed/.test(v);
+        },
+        message: 'Please provide a valid Google Maps embed URL'
+      }
     }
   },
   facilities: [{
@@ -139,9 +139,9 @@ const hostelSchema = new mongoose.Schema({
 // Indexes for better query performance
 hostelSchema.index({ slug: 1 });
 hostelSchema.index({ featured: -1, clicks: -1 });
-hostelSchema.index({ name: 'text', address: 'text', facilities: 'text' });
+hostelSchema.index({ name: 'text', 'location.address': 'text', facilities: 'text' });
 hostelSchema.index({ createdAt: -1 });
-hostelSchema.index({ price: 1 });
+hostelSchema.index({ pricePerNight: 1 });
 hostelSchema.index({ isActive: 1 });
 
 // Pre-save middleware to generate slug

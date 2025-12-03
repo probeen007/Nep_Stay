@@ -36,13 +36,13 @@ const getDashboardMetrics = async (req, res, next) => {
     const popularHostels = await Hostel.find({ isActive: true })
       .sort({ clicks: -1 })
       .limit(10)
-      .select('name slug clicks featured address price');
+      .select('name slug clicks featured location.address location.area pricePerNight');
 
     // Recent hostels (last 10)
     const recentHostels = await Hostel.find({ isActive: true })
       .sort({ createdAt: -1 })
       .limit(10)
-      .select('name slug clicks featured address price createdAt');
+      .select('name slug clicks featured location.address location.area pricePerNight createdAt');
 
     // Price statistics
     const priceStats = await Hostel.aggregate([
@@ -50,9 +50,9 @@ const getDashboardMetrics = async (req, res, next) => {
       {
         $group: {
           _id: null,
-          avgPrice: { $avg: '$price' },
-          minPrice: { $min: '$price' },
-          maxPrice: { $max: '$price' }
+          avgPrice: { $avg: '$pricePerNight' },
+          minPrice: { $min: '$pricePerNight' },
+          maxPrice: { $max: '$pricePerNight' }
         }
       }
     ]);
@@ -62,7 +62,7 @@ const getDashboardMetrics = async (req, res, next) => {
       { $match: { isActive: true } },
       {
         $bucket: {
-          groupBy: '$price',
+          groupBy: '$pricePerNight',
           boundaries: [0, 5000, 10000, 15000, 20000, 30000, Number.MAX_VALUE],
           default: 'Other',
           output: {
