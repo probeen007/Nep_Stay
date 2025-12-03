@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Plus, X, MapPin, Save, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Plus, X, MapPin, Save, CheckCircle, Building, Phone, Mail, Image, Shield, AlertTriangle } from 'lucide-react';
 import { hostelService } from '../../services';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -284,290 +284,389 @@ const EditHostel = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-4"
-      >
-        <Link
-          to="/admin/hostels"
-          className="flex items-center gap-2 text-nep-red hover:text-red-700 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Back to Hostels
-        </Link>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800">Edit Hostel</h1>
-          <p className="text-gray-600 mt-1">Update hostel information</p>
-        </div>
-      </motion.div>
-
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Basic Information */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-8">
+      <div className="container mx-auto px-6 max-w-6xl">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          className="mb-8"
         >
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">Basic Information</h2>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Link
+            to="/admin/hostels"
+            className="inline-flex items-center gap-2 text-nep-red hover:text-red-700 transition-colors mb-4 font-medium"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Hostels
+          </Link>
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <div className="flex items-center gap-4">
+              <div className="h-16 w-16 bg-gradient-to-br from-nep-red to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <Building className="h-8 w-8 text-white" />
+              </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Hostel Name *
-                </label>
-                <Input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Enter hostel name"
-                  className={errors.name ? 'border-red-500' : ''}
-                />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  Edit Hostel
+                </h1>
+                <p className="text-gray-600 mt-1 text-lg">Update your hostel information</p>
               </div>
+            </div>
+          </div>
+        </motion.div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Price per Night (₹) *
-                </label>
-                <Input
-                  type="number"
-                  min="0"
-                  value={formData.pricePerNight}
-                  onChange={(e) => handleInputChange('pricePerNight', e.target.value)}
-                  placeholder="Enter price per night"
-                  className={errors.pricePerNight ? 'border-red-500' : ''}
-                />
-                {errors.pricePerNight && <p className="text-red-500 text-sm mt-1">{errors.pricePerNight}</p>}
-              </div>
-
-              <div className="lg:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description *
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="Describe your hostel..."
-                  rows={4}
-                  className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-nepali-red focus:border-transparent transition-colors ${
-                    errors.description ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
-                {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Total Beds *
-                </label>
-                <Input
-                  type="number"
-                  min="1"
-                  value={formData.totalBeds}
-                  onChange={(e) => handleInputChange('totalBeds', e.target.value)}
-                  placeholder="Enter total number of beds"
-                  className={errors.totalBeds ? 'border-red-500' : ''}
-                />
-                {errors.totalBeds && <p className="text-red-500 text-sm mt-1">{errors.totalBeds}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Check-in Time
-                </label>
-                <Input
-                  type="time"
-                  value={formData.checkInTime}
-                  onChange={(e) => handleInputChange('checkInTime', e.target.value)}
-                  className="border-gray-300"
-                />
-                <p className="text-sm text-gray-500 mt-1">Default: 2:00 PM</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Check-out Time
-                </label>
-                <Input
-                  type="time"
-                  value={formData.checkOutTime}
-                  onChange={(e) => handleInputChange('checkOutTime', e.target.value)}
-                  className="border-gray-300"
-                />
-                <p className="text-sm text-gray-500 mt-1">Default: 11:00 AM</p>
-              </div>
-
-              <div className="col-span-2">
-                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-yellow-400 rounded-lg flex items-center justify-center">
-                      <CheckCircle className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <label className="text-lg font-semibold text-gray-900 cursor-pointer" htmlFor="featured">
-                        Featured Hostel
-                      </label>
-                      <p className="text-sm text-gray-600">Display this hostel prominently on the homepage</p>
-                    </div>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      id="featured"
-                      checked={formData.featured}
-                      onChange={(e) => handleInputChange('featured', e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-yellow-500"></div>
-                  </label>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Basic Information */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="h-12 w-12 bg-gradient-to-br from-nep-red/10 to-nep-red/20 rounded-xl flex items-center justify-center">
+                  <Building className="h-6 w-6 text-nep-red" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Basic Information</h2>
+                  <p className="text-gray-600">Essential details about your hostel</p>
                 </div>
               </div>
-            </div>
-          </Card>
-        </motion.div>
-
-        {/* Location Information */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-              <MapPin className="w-5 h-5" />
-              Location Information
-            </h2>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Area *
-                </label>
-                <select
-                  value={formData.location.area}
-                  onChange={(e) => handleNestedInputChange('location', 'area', e.target.value)}
-                  className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-nepali-red focus:border-transparent transition-colors ${
-                    errors.area ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                >
-                  <option value="">Select Area</option>
-                  {areas.map(area => (
-                    <option key={area} value={area}>{area}</option>
-                  ))}
-                </select>
-                {errors.area && <p className="text-red-500 text-sm mt-1">{errors.area}</p>}
-              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Hostel Name *
+                  </label>
+                  <Input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    placeholder="Enter a catchy hostel name"
+                    className={`h-12 text-lg ${errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:border-nep-red'}`}
+                  />
+                  {errors.name && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm mt-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>{errors.name}</span>
+                    </div>
+                  )}
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Address *
-                </label>
-                <Input
-                  type="text"
-                  value={formData.location.address}
-                  onChange={(e) => handleNestedInputChange('location', 'address', e.target.value)}
-                  placeholder="Enter full address"
-                  className={errors.address ? 'border-red-500' : ''}
-                />
-                {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-              </div>
-
-              <div className="lg:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Google Maps URL (Optional) 🗺️
-                </label>
-                <Input
-                  type="url"
-                  value={formData.location.googleMapsUrl || ''}
-                  onChange={(e) => handleNestedInputChange('location', 'googleMapsUrl', e.target.value)}
-                  placeholder="Paste Google Maps embed URL here..."
-                  className={errors.googleMapsUrl ? 'border-red-500' : ''}
-                />
-                {errors.googleMapsUrl && <p className="text-red-500 text-sm mt-1">{errors.googleMapsUrl}</p>}
-                <p className="text-sm text-gray-500 mt-2">
-                  💡 Go to Google Maps → Share → Embed a map → Copy the iframe src URL
-                </p>
-                
-                {formData.location.googleMapsUrl && formData.location.googleMapsUrl.includes('google.com/maps') && (
-                  <div className="mt-4 border-2 border-blue-300 rounded-lg overflow-hidden">
-                    <p className="text-sm font-medium text-blue-700 bg-blue-50 px-3 py-2">📍 Map Preview:</p>
-                    <iframe
-                      src={formData.location.googleMapsUrl}
-                      width="100%"
-                      height="300"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title="Location Preview"
-                    ></iframe>
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Price per Night (₹) *
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg font-medium">₹</span>
+                    <Input
+                      type="number"
+                      min="0"
+                      value={formData.pricePerNight}
+                      onChange={(e) => handleInputChange('pricePerNight', e.target.value)}
+                      placeholder="2000"
+                      className={`h-12 text-lg pl-8 ${errors.pricePerNight ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:border-nep-red'}`}
+                    />
                   </div>
-                )}
+                  {errors.pricePerNight && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm mt-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>{errors.pricePerNight}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="lg:col-span-2 space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Description *
+                  </label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    placeholder="Describe what makes your hostel special - amenities, atmosphere, location highlights..."
+                    rows={5}
+                    className={`w-full px-4 py-3 rounded-xl border-2 focus:ring-4 focus:ring-nep-red/20 focus:border-nep-red transition-all duration-200 resize-none ${
+                      errors.description ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    }`}
+                  />
+                  {errors.description && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm mt-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>{errors.description}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Total Beds *
+                  </label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={formData.totalBeds}
+                    onChange={(e) => handleInputChange('totalBeds', e.target.value)}
+                    placeholder="12"
+                    className={`h-12 text-lg ${errors.totalBeds ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:border-nep-red'}`}
+                  />
+                  {errors.totalBeds && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm mt-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>{errors.totalBeds}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Check-in Time
+                  </label>
+                  <Input
+                    type="time"
+                    value={formData.checkInTime}
+                    onChange={(e) => handleInputChange('checkInTime', e.target.value)}
+                    className="h-12 text-lg border-gray-300 focus:border-nep-red"
+                  />
+                  <p className="text-sm text-gray-500">Default: 2:00 PM</p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Check-out Time
+                  </label>
+                  <Input
+                    type="time"
+                    value={formData.checkOutTime}
+                    onChange={(e) => handleInputChange('checkOutTime', e.target.value)}
+                    className="h-12 text-lg border-gray-300 focus:border-nep-red"
+                  />
+                  <p className="text-sm text-gray-500">Default: 11:00 AM</p>
+                </div>
+
+                <div className="lg:col-span-2 space-y-2">
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-yellow-400 rounded-lg flex items-center justify-center">
+                        <CheckCircle className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <label className="text-lg font-semibold text-gray-900 cursor-pointer" htmlFor="featured-edit">
+                          Featured Hostel
+                        </label>
+                        <p className="text-sm text-gray-600">Display this hostel prominently on the homepage</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="featured-edit"
+                        checked={formData.featured}
+                        onChange={(e) => handleInputChange('featured', e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-yellow-500"></div>
+                    </label>
+                  </div>
+                </div>
               </div>
-            </div>
           </Card>
         </motion.div>
 
-        {/* Contact Information */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">Contact Information</h2>
+          {/* Location Information */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="h-12 w-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center">
+                  <MapPin className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Location Information</h2>
+                  <p className="text-gray-600">Help guests find your hostel easily</p>
+                </div>
+              </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
-                </label>
-                <Input
-                  type="tel"
-                  value={formData.contactInfo.phone}
-                  onChange={(e) => handleNestedInputChange('contactInfo', 'phone', e.target.value)}
-                  placeholder="Enter phone number"
-                />
-              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Area *
+                  </label>
+                  <select
+                    value={formData.location.area}
+                    onChange={(e) => handleNestedInputChange('location', 'area', e.target.value)}
+                    className={`w-full h-12 px-4 py-3 rounded-xl border-2 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 text-lg ${
+                      errors.area ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                    }`}
+                  >
+                    <option value="">Choose popular area in Kathmandu</option>
+                    {areas.map(area => (
+                      <option key={area} value={area}>{area}</option>
+                    ))}
+                  </select>
+                  {errors.area && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm mt-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>{errors.area}</span>
+                    </div>
+                  )}
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <Input
-                  type="email"
-                  value={formData.contactInfo.email}
-                  onChange={(e) => handleNestedInputChange('contactInfo', 'email', e.target.value)}
-                  placeholder="Enter email address"
-                />
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Full Address *
+                  </label>
+                  <Input
+                    type="text"
+                    value={formData.location.address}
+                    onChange={(e) => handleNestedInputChange('location', 'address', e.target.value)}
+                    placeholder="Street name, landmark, postal code"
+                    className={`h-12 text-lg ${errors.address ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:border-blue-500'}`}
+                  />
+                  {errors.address && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm mt-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>{errors.address}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="lg:col-span-2">
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                    <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center gap-2">
+                      <MapPin className="w-5 h-5" />
+                      Google Maps Location (Optional)
+                    </h3>
+                    <p className="text-blue-700 mb-4 text-sm">
+                      📍 To get Google Maps URL:
+                      <br />1. Go to Google Maps and find your hostel location
+                      <br />2. Click "Share" button → "Embed a map" 
+                      <br />3. Copy the URL from the iframe src (starts with https://www.google.com/maps/embed...)
+                    </p>
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-blue-800">
+                        Google Maps Embed URL
+                      </label>
+                      <Input
+                        type="url"
+                        value={formData.location.googleMapsUrl || ''}
+                        onChange={(e) => handleNestedInputChange('location', 'googleMapsUrl', e.target.value)}
+                        placeholder="https://www.google.com/maps/embed?pb=!1m18!1m12..."
+                        className={`h-12 text-lg bg-white ${errors.googleMapsUrl ? 'border-red-500' : 'border-blue-300 focus:border-blue-500'}`}
+                      />
+                      {errors.googleMapsUrl && (
+                        <div className="flex items-center gap-2 text-red-600 text-sm mt-2">
+                          <AlertTriangle className="w-4 h-4" />
+                          <span>{errors.googleMapsUrl}</span>
+                        </div>
+                      )}
+                      {formData.location.googleMapsUrl && formData.location.googleMapsUrl.includes('google.com/maps') && (
+                        <div className="mt-4 border border-blue-300 rounded-lg overflow-hidden">
+                          <div className="bg-blue-100 px-3 py-2 text-blue-800 text-sm font-medium">
+                            🗺️ Map Preview:
+                          </div>
+                          <iframe
+                            src={formData.location.googleMapsUrl}
+                            width="100%"
+                            height="200"
+                            style={{ border: 0 }}
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title="Location Preview"
+                          ></iframe>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
           </Card>
         </motion.div>
 
-        {/* Images */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-800">Image URLs *</h2>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={addImageField}
-                className="flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Add Image
-              </Button>
-            </div>
+          {/* Contact Information */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="h-12 w-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">
+                  <Phone className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Contact Information</h2>
+                  <p className="text-gray-600">How can guests reach you?</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Phone Number
+                  </label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Input
+                    type="text"
+                    value={formData.contactInfo.phone}
+                    onChange={(e) => handleNestedInputChange('contactInfo', 'phone', e.target.value)}
+                    placeholder="+977 98XXXXXXXX"
+                    className="h-12 text-lg pl-12 border-gray-300 focus:border-green-500"
+                  />
+                  </div>
+                  <p className="text-sm text-gray-500">Optional - for guest inquiries</p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Input
+                      type="email"
+                      value={formData.contactInfo.email}
+                      onChange={(e) => handleNestedInputChange('contactInfo', 'email', e.target.value)}
+                      placeholder="contact@yourhostel.com"
+                      className="h-12 text-lg pl-12 border-gray-300 focus:border-green-500"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500">Optional - for email inquiries</p>
+                </div>
+              </div>
+          </Card>
+        </motion.div>
+
+          {/* Images */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center">
+                    <Image className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Hostel Images *</h2>
+                    <p className="text-gray-600">Show off your beautiful space</p>
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addImageField}
+                  className="flex items-center gap-2 h-12 px-6 border-2 border-purple-200 text-purple-700 hover:bg-purple-50"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add Image
+                </Button>
+              </div>
             
             <div className="space-y-4">
               {formData.images.map((image, index) => (
@@ -596,14 +695,22 @@ const EditHostel = () => {
           </Card>
         </motion.div>
 
-        {/* Facilities */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">Facilities *</h2>
+          {/* Facilities */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <Card className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="h-12 w-12 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-xl flex items-center justify-center">
+                  <Shield className="h-6 w-6 text-indigo-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Facilities & Amenities *</h2>
+                  <p className="text-gray-600">What do you offer to guests?</p>
+                </div>
+              </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {availableFacilities.map(facility => (
@@ -622,25 +729,33 @@ const EditHostel = () => {
           </Card>
         </motion.div>
 
-        {/* House Rules */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-800">House Rules</h2>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={addRuleField}
-                className="flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Add Rule
-              </Button>
-            </div>
+          {/* House Rules */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <Card className="p-8 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 bg-gradient-to-br from-red-100 to-red-200 rounded-xl flex items-center justify-center">
+                    <Shield className="h-6 w-6 text-red-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">House Rules</h2>
+                    <p className="text-gray-600">Set clear expectations for guests</p>
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addRuleField}
+                  className="flex items-center gap-2 h-12 px-6 border-2 border-red-200 text-red-700 hover:bg-red-50"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add Rule
+                </Button>
+              </div>
             
             <div className="space-y-4">
               {formData.rules.map((rule, index) => (
@@ -668,40 +783,55 @@ const EditHostel = () => {
           </Card>
         </motion.div>
 
-        {/* Submit Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="flex justify-end space-x-4"
-        >
-          <Link
-            to="/admin/hostels"
-            className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+          {/* Submit Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="flex justify-end gap-4 pt-4"
           >
-            Cancel
-          </Link>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={saving}
-            className="flex items-center gap-2 min-w-[140px]"
-          >
-            {saving ? (
-              <LoadingSpinner size="sm" />
-            ) : (
-              <Save className="w-4 h-4" />
-            )}
-            {saving ? 'Updating...' : 'Update Hostel'}
-          </Button>
-        </motion.div>
+            <Link
+              to="/admin/hostels"
+              className="px-8 py-4 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 flex items-center gap-2"
+            >
+              <X className="w-5 h-5" />
+              Cancel
+            </Link>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={saving}
+              className="px-8 py-4 h-auto text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3 min-w-[180px] justify-center bg-gradient-to-r from-nep-red to-red-600"
+            >
+              {saving ? (
+                <>
+                  <LoadingSpinner size="sm" />
+                  <span>Updating...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-5 h-5" />
+                  <span>Update Hostel</span>
+                </>
+              )}
+            </Button>
+          </motion.div>
 
-        {errors.submit && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-700">{errors.submit}</p>
-          </div>
-        )}
-      </form>
+          {errors.submit && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-50 border-2 border-red-200 rounded-xl p-6 flex items-start gap-3"
+            >
+              <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-red-800 mb-1">Error Updating Hostel</h3>
+                <p className="text-red-700">{errors.submit}</p>
+              </div>
+            </motion.div>
+          )}
+        </form>
+      </div>
     </div>
   );
 };
