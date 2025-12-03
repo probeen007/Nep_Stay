@@ -82,10 +82,11 @@ const EditHostel = () => {
       const response = await hostelService.getById(id);
       console.log('EditHostel: API Response:', response);
       
-      const hostel = response.data;
+      // API returns data: { hostel: {...} }
+      const hostel = response.data?.hostel || response.data;
       console.log('EditHostel: Hostel data:', hostel);
       
-      if (!hostel) {
+      if (!hostel || !hostel.name) {
         throw new Error('No hostel data received from server');
       }
       
