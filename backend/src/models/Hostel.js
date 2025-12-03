@@ -162,7 +162,7 @@ hostelSchema.pre('save', function(next) {
 
 // Virtual for formatted price
 hostelSchema.virtual('formattedPrice').get(function() {
-  return `Rs. ${this.price.toLocaleString()}`;
+  return this.pricePerNight ? `Rs. ${this.pricePerNight.toLocaleString()}` : 'Rs. 0';
 });
 
 // Static method to get popular hostels
