@@ -67,41 +67,57 @@ const EditHostel = () => {
   ];
 
   useEffect(() => {
-    fetchHostelData();
+    if (id) {
+      fetchHostelData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchHostelData = async () => {
     try {
       setLoading(true);
+      setErrors({});
+      console.log('EditHostel: Fetching data for hostel ID:', id);
+      
       const response = await hostelService.getById(id);
+      console.log('EditHostel: API Response:', response);
+      
       const hostel = response.data;
+      console.log('EditHostel: Hostel data:', hostel);
       
-      console.log('EditHostel: Loaded hostel data:', hostel);
+      if (!hostel) {
+        throw new Error('No hostel data received from server');
+      }
       
-      setFormData({
+      const formDataToSet = {
         name: hostel.name || '',
         description: hostel.description || '',
-        pricePerNight: hostel.pricePerNight?.toString() || '',
+        pricePerNight: hostel.pricePerNight?.toString() || hostel.price?.toString() || '',
         totalBeds: hostel.totalBeds?.toString() || '',
         checkInTime: hostel.checkInTime || '14:00',
         checkOutTime: hostel.checkOutTime || '11:00',
         featured: hostel.featured || false,
         location: {
           area: hostel.location?.area || '',
-          address: hostel.address || hostel.location?.address || '',
-          googleMapsUrl: hostel.googleMapsUrl || hostel.location?.googleMapsUrl || ''
+          address: hostel.location?.address || hostel.address || '',
+          googleMapsUrl: hostel.location?.googleMapsUrl || hostel.googleMapsUrl || ''
         },
         contactInfo: {
-          phone: hostel.contactInfo?.phone || '',
-          email: hostel.contactInfo?.email || ''
+          phone: hostel.contactInfo?.phone || hostel.contact?.phone || '',
+          email: hostel.contactInfo?.email || hostel.contact?.email || ''
         },
         images: hostel.images && hostel.images.length > 0 ? hostel.images : [''],
         facilities: hostel.facilities || [],
         rules: hostel.rules && hostel.rules.length > 0 ? hostel.rules : ['']
-      });
+      };
+      
+      console.log('EditHostel: Setting form data:', formDataToSet);
+      setFormData(formDataToSet);
+      
     } catch (error) {
       console.error('Error fetching hostel data:', error);
-      setErrors({ fetch: 'Failed to load hostel data' });
+      console.error('Error details:', error.response || error.message);
+      setErrors({ fetch: `Failed to load hostel data: ${error.message || 'Unknown error'}` });
     } finally {
       setLoading(false);
     }
@@ -266,19 +282,32 @@ const EditHostel = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <LoadingSpinner size="lg" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <LoadingSpinner size="lg" />
+          <p className="mt-4 text-gray-600 text-lg">Loading hostel data...</p>
+        </div>
       </div>
     );
   }
 
   if (errors.fetch) {
     return (
-      <div className="text-center py-12">
-        <p className="text-red-500 mb-4">{errors.fetch}</p>
-        <Link to="/admin/hostels" className="btn-primary">
-          Back to Hostels
-        </Link>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-6">
+            <AlertTriangle className="w-16 h-16 text-red-600 mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-red-800 mb-2">Failed to Load Hostel</h2>
+            <p className="text-red-600">{errors.fetch}</p>
+          </div>
+          <Link 
+            to="/admin/hostels" 
+            className="inline-flex items-center gap-2 px-6 py-3 bg-nep-red text-white rounded-xl hover:bg-red-700 transition-colors font-semibold"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Hostels
+          </Link>
+        </div>
       </div>
     );
   }
