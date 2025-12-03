@@ -199,6 +199,20 @@ const schemas = {
       .messages({
         'string.max': 'Rule cannot exceed 200 characters'
       }),
+    checkInTime: Joi.string()
+      .pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+      .allow('', null)
+      .optional()
+      .messages({
+        'string.pattern.base': 'Check-in time must be in HH:MM format'
+      }),
+    checkOutTime: Joi.string()
+      .pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+      .allow('', null)
+      .optional()
+      .messages({
+        'string.pattern.base': 'Check-out time must be in HH:MM format'
+      }),
     featured: Joi.boolean()
   }),
 
@@ -303,6 +317,18 @@ const schemas = {
       .items(Joi.string().max(200))
       .messages({
         'string.max': 'Rule cannot exceed 200 characters'
+      }),
+    checkInTime: Joi.string()
+      .pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+      .allow('', null)
+      .messages({
+        'string.pattern.base': 'Check-in time must be in HH:MM format'
+      }),
+    checkOutTime: Joi.string()
+      .pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
+      .allow('', null)
+      .messages({
+        'string.pattern.base': 'Check-out time must be in HH:MM format'
       }),
     featured: Joi.boolean(),
     isActive: Joi.boolean()

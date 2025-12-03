@@ -117,6 +117,31 @@ const hostelSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, 'Facility name cannot exceed 50 characters']
   }],
+  rules: [{
+    type: String,
+    trim: true,
+    maxlength: [200, 'Rule cannot exceed 200 characters']
+  }],
+  checkInTime: {
+    type: String,
+    default: '14:00',
+    validate: {
+      validator: function(v) {
+        return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(v);
+      },
+      message: 'Please provide a valid time in HH:MM format'
+    }
+  },
+  checkOutTime: {
+    type: String,
+    default: '11:00',
+    validate: {
+      validator: function(v) {
+        return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(v);
+      },
+      message: 'Please provide a valid time in HH:MM format'
+    }
+  },
   featured: {
     type: Boolean,
     default: false

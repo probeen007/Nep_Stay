@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Plus, X, MapPin, Save } from 'lucide-react';
+import { ArrowLeft, Plus, X, MapPin, Save, CheckCircle } from 'lucide-react';
 import { hostelService } from '../../services';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -20,6 +20,9 @@ const EditHostel = () => {
     description: '',
     pricePerNight: '',
     totalBeds: '',
+    checkInTime: '14:00',
+    checkOutTime: '11:00',
+    featured: false,
     location: {
       area: '',
       address: '',
@@ -80,6 +83,9 @@ const EditHostel = () => {
         description: hostel.description || '',
         pricePerNight: hostel.pricePerNight?.toString() || '',
         totalBeds: hostel.totalBeds?.toString() || '',
+        checkInTime: hostel.checkInTime || '14:00',
+        checkOutTime: hostel.checkOutTime || '11:00',
+        featured: hostel.featured || false,
         location: {
           area: hostel.location?.area || '',
           address: hostel.address || hostel.location?.address || '',
@@ -367,6 +373,58 @@ const EditHostel = () => {
                   className={errors.totalBeds ? 'border-red-500' : ''}
                 />
                 {errors.totalBeds && <p className="text-red-500 text-sm mt-1">{errors.totalBeds}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Check-in Time
+                </label>
+                <Input
+                  type="time"
+                  value={formData.checkInTime}
+                  onChange={(e) => handleInputChange('checkInTime', e.target.value)}
+                  className="border-gray-300"
+                />
+                <p className="text-sm text-gray-500 mt-1">Default: 2:00 PM</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Check-out Time
+                </label>
+                <Input
+                  type="time"
+                  value={formData.checkOutTime}
+                  onChange={(e) => handleInputChange('checkOutTime', e.target.value)}
+                  className="border-gray-300"
+                />
+                <p className="text-sm text-gray-500 mt-1">Default: 11:00 AM</p>
+              </div>
+
+              <div className="col-span-2">
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 bg-yellow-400 rounded-lg flex items-center justify-center">
+                      <CheckCircle className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <label className="text-lg font-semibold text-gray-900 cursor-pointer" htmlFor="featured">
+                        Featured Hostel
+                      </label>
+                      <p className="text-sm text-gray-600">Display this hostel prominently on the homepage</p>
+                    </div>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      id="featured"
+                      checked={formData.featured}
+                      onChange={(e) => handleInputChange('featured', e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-yellow-500"></div>
+                  </label>
+                </div>
               </div>
             </div>
           </Card>

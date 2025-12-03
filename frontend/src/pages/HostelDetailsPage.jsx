@@ -341,9 +341,10 @@ const HostelDetailsPage = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="lg:col-span-1 space-y-6">
             {/* Booking Card */}
-            <Card className="p-6 sticky top-32">
+            <div className="sticky top-24 space-y-6">
+            <Card className="p-6">
               <div className="text-center mb-6">
                 <div className="text-3xl font-bold text-nep-red mb-2">
                   Rs. {hostel.pricePerNight || hostel.price}
@@ -378,11 +379,15 @@ const HostelDetailsPage = () => {
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600">Check-in:</span>
-                  <span className="font-semibold">2:00 PM</span>
+                  <span className="font-semibold">
+                    {hostel.checkInTime ? new Date(`2000-01-01T${hostel.checkInTime}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '2:00 PM'}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600">Check-out:</span>
-                  <span className="font-semibold">11:00 AM</span>
+                  <span className="font-semibold">
+                    {hostel.checkOutTime ? new Date(`2000-01-01T${hostel.checkOutTime}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '11:00 AM'}
+                  </span>
                 </div>
               </div>
             </Card>
@@ -454,6 +459,7 @@ const HostelDetailsPage = () => {
                 </div>
               </div>
             </Card>
+            </div>
           </div>
         </div>
       </div>
